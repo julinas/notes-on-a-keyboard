@@ -1,0 +1,67 @@
+html, body {
+    height: 100%;
+    background-color: #9ca8ba; /* Gray */   
+}
+
+.titlebox {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+    background-color: white;
+}
+
+.titlebox .name {
+    font-size: 50px;
+}
+
+.titlebox .titleline{
+    font-style: italic;
+}
+
+.portfolio {
+    padding: 10px;
+    margin: 0px;
+}
+
+.keyboard {
+    text-align: center;
+}
+
+.keyboard span {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    border-radius: 0.25em;
+    color: white;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    margin: 0.5em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 2em;
+    border-bottom: 1px solid currentColor;
+}
+
+.keyboard span::after {
+    content: attr(id);
+    display: block;
+}
+
+.keyboard span.active,
+.keyboard span:active {
+    background-color: gray;
+}
+
+.keyboard span[id=" "] {
+    width: 17em;
+}
+
+.keyboard span[id="F"]::after,
+.keyboard span[id="J"]::after {
+    text-shadow: -2px 2px #770000;;
+}
+
+.MIDISounds {
+    display: none !important;
+}
