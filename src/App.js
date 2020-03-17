@@ -28,21 +28,37 @@ class Key extends React.Component {
         else if (name[0] === "B") num += 11;
         
         if (name[1]) {
+            if (name[1] === "#") {
+                num += 1;
+            }
+            else if (name[1] === "b") {
+                num -= 1;
+            }
+            else {
+                num += parseInt(name[1])*12;
+            }
         }
         else {
             num += 5*12;
         }
         
         if (name[2]) {
+            if (name[2] === "#") {
+                num += 1;
+            }
+            else if (name[2] === "b") {
+                num -= 1;
+            }
         }
-        
+        console.log(num);
         return num;
     }
     
     handleClick = () => {
         if (!this.state.active) {
-            console.log(this.props.data);
-            this.midiSounds.playChordNow(14, [this.calculateNote(this.props.data)], 0.5);
+            if (this.props.note !== " ") {
+                this.midiSounds.playChordNow(14, [this.calculateNote(this.props.note)], 0.5);
+            }
             this.toggleActive();
             setTimeout(this.toggleActive, 100);
         }
@@ -56,7 +72,8 @@ class Key extends React.Component {
         return (
             <React.Fragment>
                 <span 
-                    id={this.props.data} 
+                    id={this.props.data}
+                    title={this.props.note}
                     className={this.state.active ? 'active' : null} 
                     onClick={this.handleClick.bind(this)}
                 />
@@ -68,12 +85,14 @@ class Key extends React.Component {
 
 class Row extends React.Component {
     data = this.props.data.split('');
+    notes = this.props.notes.split(',');
+    zipped = this.data.map((x, i) => [x, this.notes[i]]);
     
     render() {
         return (
             <React.Fragment>
                 <div className="row">
-                    {this.data.map(value => (<Key data={value} key={value}/>))}
+                    {this.zipped.map(value => (<Key data={value[0]} key={value[0]} note={value[1]}/>))}
                 </div>
             </React.Fragment>
         );
@@ -93,11 +112,11 @@ class App extends React.Component {
                     </div>
                 </div>
                 <div className="keyboard">
-                    <Row data="`1234567890-="/>
-                    <Row data="QWERTYUIOP[]"/>
-                    <Row data="ASDFGHJKL;'"/>
-                    <Row data="ZXCVBNM,./"/>
-                    <Row data=" "/>
+                    <Row data="`1234567890-=" notes="A,B,C,D,E,F,G,A,B,C,D,E,F"/>
+                    <Row data="QWERTYUIOP[]" notes="A,B,C,D,E,F,G,A,B,C,D,E"/>
+                    <Row data="ASDFGHJKL;'" notes="A,B,C,D,E,F,G,A,B,C,D"/>
+                    <Row data="ZXCVBNM,./" notes="A,B,C,D,E,F,G,A,B,C"/>
+                    <Row data=" " notes=" "/>
                 </div>
             </div>
         );
