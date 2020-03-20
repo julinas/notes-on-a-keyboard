@@ -13,7 +13,41 @@ const handleKeyPress = (event) => {
     }
 }
 
-document.onkeypress = handleKeyPress;
+const handleKeyDown = (event) => {
+    if (event.code) {
+        if (event.code === "ShiftLeft") {
+            let shift = document.getElementById("\#");
+            let keyboard = document.getElementById("keyboard");
+            if (shift != null && 
+                keyboard != null && 
+                keyboard.className !== "sharp") {
+                shift.click();
+            }
+        }
+    }
+}
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// There's really no way at all to prevent keyup from being triggered 
+// by another key. It's in the browser.
+// So there's really no reason to prefer to propagate from the top 
+// instead of just checking for event.shiftKey. 
+const handleKeyUp = (event) => {
+    if (event.code) {
+        if (event.code === "ShiftLeft") {
+            let shift = document.getElementById("\#");
+            let keyboard = document.getElementById("keyboard");
+            if (shift != null && 
+                keyboard != null && 
+                keyboard.className === "sharp") {
+                shift.click();
+            }
+        }
+    }
+}
+
+document.onkeypress = handleKeyPress;
+document.onkeydown = handleKeyDown;
+document.onkeyup = handleKeyUp;
+
+ReactDOM.render(<App/>, document.getElementById('root'));
 

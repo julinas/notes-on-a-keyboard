@@ -23,11 +23,11 @@ html, body {
     margin: 0px;
 }
 
-.keyboard {
+[id="keyboard"] {
     text-align: center;
 }
 
-.keyboard span {
+[id="keyboard"] span {
     background-color: #4CAF50; /* Green */
     border: none;
     border-radius: 0.25em;
@@ -43,23 +43,54 @@ html, body {
     border-bottom: 1px solid currentColor;
 }
 
-.keyboard span::after {
-    content: attr(id);
+[id="keyboard"] span::after {
+    /* content: attr(id); */
+    content: attr(title);
     display: block;
 }
 
-.keyboard span.active,
-.keyboard span:active {
+[id="keyboard"] span.active,
+[id="keyboard"] span:active {
     background-color: gray;
 }
 
-.keyboard span[id=" "] {
+[id="keyboard"] span[id=" "] {
     width: 17em;
 }
 
-.keyboard span[id="F"]::after,
-.keyboard span[id="J"]::after {
+[id="keyboard"] span[id="#"] {
+    width: 6em;
+}
+
+[id="keyboard"] span[id="#"]::after {
+    content: "Sharp";
+}
+
+[id="keyboard"].sharp span[id="#"] {
+    background-color:gray;
+}
+
+[id="keyboard"] span[id="F"]::after,
+[id="keyboard"] span[id="J"]::after {
     text-shadow: -2px 2px #770000;;
+}
+
+[id="keyboard"] span[id="`"],
+[id="keyboard"] span[id="1"],
+[id="keyboard"] span[id="2"],
+[id="keyboard"] span[id="3"],
+[id="keyboard"] span[id="4"],
+[id="keyboard"] span[id="5"],
+[id="keyboard"] span[id="6"],
+[id="keyboard"] span[id="7"],
+[id="keyboard"] span[id="8"],
+[id="keyboard"] span[id="9"],
+[id="keyboard"] span[id="0"],
+[id="keyboard"] span[id="-"],
+[id="keyboard"] span[id="["],
+[id="keyboard"] span[id="]"],
+[id="keyboard"] span[id="="] {
+    background-color: #ADD8E6; /* Blue */
 }
 
 .MIDISounds {
