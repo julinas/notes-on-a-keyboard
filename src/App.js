@@ -3,6 +3,8 @@ import MIDISounds from 'midi-sounds-react';
 import './App.css';
 
 const noteNameToNum = (name) => {
+	if (name === " ") return NaN;
+
     // C C# D D# E F F# G G# A A# B
     // 0 1  2 3  4 5 6  7 8  9 10 11
     // Middle C is +5*12
@@ -20,17 +22,19 @@ const noteNameToNum = (name) => {
     num += parsed*12;
     
     if (name[2]) {
-        if (name[2] === "#") {
-            num += 1;
-        }
-        else if (name[2] === "b") {
-            num -= 1;
-        }
-    }
+	    if (name[2] === "#") {
+	        num += 1;
+	    }
+	    else if (name[2] === "b") {
+	        num -= 1;
+	    }
+	}
     return num;  
 }
 
 const noteNumToName = (num) => {
+	if (isNaN(num)) return " ";
+
     let ones = "C C# D D# E F F# G G# A A# B".split(" ");
     let octave = Math.floor(num / 12);
     let letters = num % 12;
@@ -48,24 +52,21 @@ class Key extends React.Component {
         this.setSharp = this.setSharp.bind(this);
         this.state = {
             active: false,
-            note: this.props.note
+            sharp: false
         };
     }
-    
+
     setSharp = (value) => {
-        if (value) {
-            let num = noteNameToNum(this.props.note);
-            if (!isNaN(num)) {
-                this.setState({note: noteNumToName(num + 1)});
-            }
-        }
-        else this.setState({note: this.props.note})
+        this.setState({sharp: value});
     }
     
     handleClick = (e) => {
         if (!this.state.active) {
-            if (this.state.note !== " ") {
-                this.midiSounds.playChordNow(14, [noteNameToNum(this.state.note)], 0.5);
+            if (this.props.notekey !== " ") {
+            	if (this.state.sharp) {
+                	this.props.midi.playChordNow(14, [this.props.sharpNum], 0.5);
+            	}
+            	else this.props.midi.playChordNow(14, [this.props.noteNum], 0.5);
             }
             this.toggleActive();
             setTimeout(this.toggleActive, 100);
@@ -79,28 +80,39 @@ class Key extends React.Component {
     render() {        
         return (
             <React.Fragment>
-                <span 
-                    id={this.props.data}
-                    title={this.props.note}
-                    className={this.state.active ? 'active' : null} 
+                <span
+                	id={this.props.data}
+                    className={this.state.active ? 'key active' : 'key'} 
                     onClickCapture={this.handleClick}
-                />
-                <MIDISounds ref={(ref) => (this.midiSounds = ref)}  instruments={[3]} />	
+                >
+                	<span
+                		title={this.props.sharpkey}
+                		className="sharp"
+                	/>  
+                   	<span
+                	    title={this.props.notekey}
+                	    className="note"
+                	/>              
+                </span>	
             </React.Fragment>
         );
     }
 }
 
+// Row
 class Row extends React.Component {
     constructor(props) {
         super(props);
         this.setSharp = this.setSharp.bind(this);
         this.keys = {};
     }
-    
     data = this.props.data.split('');
     notes = this.props.notes.split(',');
-    zipped = this.data.map((x, i) => [x, this.notes[i]]);
+    notesNum = this.notes.map((x, i) => noteNameToNum(x));
+    sharps = this.notes.map((x, i) => noteNumToName(this.notesNum[i] + 1));
+    sharpsNum = this.sharps.map((x, i) => noteNameToNum(x));
+    zipped = this.data.map((x, i) => [x, this.notes[i], this.notesNum[i], this.sharps[i], this.sharpsNum[i]]);
+    className = this.props.shiftLeft ? "row shiftLeft" : "row";
     
     setSharp = (value) => {
         let indices = Object.keys(this.keys);
@@ -108,7 +120,7 @@ class Row extends React.Component {
             this.keys[indices[i]].current.setSharp(value);
         }
     }
-    
+
     // using base note as id for key
     createRef = (id) => {
         id = id.charCodeAt(0);
@@ -116,17 +128,20 @@ class Row extends React.Component {
         this.keys[id] = keyRef;
         return keyRef;
     }
-    
+
     render() {
         return (
             <React.Fragment>
-                <div className="row">
-                    {this.zipped.map(value => (
+                <div className={this.className}>
+                    {this.zipped.map(x => (
                         <Key 
-                            ref={this.createRef(value[0])}
-                            data={value[0]} 
-                            key={value[0]} 
-                            note={value[1]}
+                            data={x[0]}
+                            ref={this.createRef(x[0])} // for ref
+                            midi={this.props.midi}
+                            notekey={x[1]}
+                            noteNum={x[2]}
+                            sharpkey={x[3]}
+                            sharpNum={x[4]}
                         />
                     ))}
                 </div>
@@ -144,59 +159,65 @@ class Keyboard extends React.Component {
             sharp: false
         };
     }
-    
+
     toggleSharp = (event) => {
-        if (event.target.id !== "\#") {
+        if (event.target.id !== "#") {
             return;
         }
         let value = !this.state.sharp;
-        this.setState({sharp: value})
-        for (let key in Object.keys(this.rows)) {
-            this.rows[key].current.setSharp(value);
+        this.setState({sharp: value});
+        let indices = Object.keys(this.rows);
+        for (let i = 0; i < indices.length; i++) {
+            this.rows[indices[i]].current.setSharp(value);
         }
     }
-    
+
     createRef = (id) => {
         let rowRef = React.createRef(id);
         this.rows[id] = rowRef;
         return rowRef;
     }
     
-    // recaculate name of notes 
-    calculateNotes = (notes, sharp) => {
-        // recalculate names for correct octave 
-        // i.e. if no octave, set to 5th
+    /* recaculate name of notes */
+    setNotes = (notes) => {
+        // if no octave, set to 5th
+        // if no sharp or flat, set to "n"
         notes = notes.split(",");
         for (let i = 0; i < notes.length; i++) {
             if (notes[i] !== " ") {
                 let note = notes[i].split("");
                 let parsed = parseInt(note[1]);
-                if (isNaN(parsed)) {
-                    note.splice(1, 0, "5");
-                    notes[i] = note.join("");
-                }
+                if (isNaN(parsed)) note.splice(1, 0, "5");
+                notes[i] = note.join("");
             }
         }
         return notes.join();
     }
     
+    // Moving MIDISounds to top level makes the application lighter, 
+    // but it doesn't allow *exactly* simultaneous notes, so chords could be problematic (mostly fine, though)
     render() {
         return (
             <React.Fragment>
                 <div 
-                    id="keyboard" 
-                    className={this.state.sharp ? 'sharp' : null}
-                    onClick={this.toggleSharp}
+                	id="keyboard"
+                	className={this.state.sharp ? 'sharp' : null}
+                	onClick={this.toggleSharp}
                 >
-                    <Row ref={this.createRef(0)} data="`1234567890-=" notes={this.calculateNotes("A,B,C,D,E,F,G,A,B,C,D,E,F")}/>
-                    <Row ref={this.createRef(1)} data="QWERTYUIOP[]" notes={this.calculateNotes("A6#,C7,D7,E7,F7#,G7#,A7#,C8,D8,E8,A,A")}/>
-                    <Row ref={this.createRef(2)} data="ASDFGHJKL;'" notes={this.calculateNotes("C5,D5,E5,F5#,G5#,A5#,C6,D6,E6,F6#,G6#")}/>
-                    <Row ref={this.createRef(3)} data="#ZXCVBNM,./" notes={this.calculateNotes(" ,E3,F3#,G3#,A3#,C4,D4,E4,F4#,G4#,A4#")}/>
-                    <Row ref={this.createRef(4)} data=" " notes=" "/>
+                	<MIDISounds ref={(ref) => (this.midi = ref)}  instruments={[3]} />
+                    <Row ref={this.createRef(0)} midi={this.midi} data="`1234567890-=" notes={this.setNotes("A,B,C,D,E,F,G,A,B,C,D,E,F")}/>
+                    <Row ref={this.createRef(1)} midi={this.midi} data="QWERTYUIOP[]" notes={this.setNotes("A6#,C7,D7,E7,F7#,G7#,A7#,C8,D8,E8,A,A")}/>
+                    <Row ref={this.createRef(2)} midi={this.midi} data="ASDFGHJKL;'" notes={this.setNotes("C5,D5,E5,F5#,G5#,A5#,C6,D6,E6,F6#,G6#")}/>
+                    <Row ref={this.createRef(3)} midi={this.midi} data="#ZXCVBNM,./" shiftLeft={true} notes={this.setNotes(" ,E3,F3#,G3#,A3#,C4,D4,E4,F4#,G4#,A4#")}/>
+                    <Row ref={this.createRef(4)} midi={this.midi} data=" " notes=" "/>
                 </div>
             </React.Fragment>
         )
     }
+
+    componentDidMount() {
+		this.setState(this.state);
+	}
 }
 
 class App extends React.Component {
@@ -211,12 +232,10 @@ class App extends React.Component {
                         piano notes, and stuff
                     </div>
                 </div>
-                <Keyboard/>
+	            <Keyboard/>
             </div>
         );
     }
 }
-
-
 
 export default App;

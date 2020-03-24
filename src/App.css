@@ -27,14 +27,18 @@ html, body {
     text-align: center;
 }
 
-[id="keyboard"] span {
+[id="keyboard"] .row.shiftLeft {
+    margin-left: -11em;
+}
+
+[id="keyboard"] span.key {
     background-color: #4CAF50; /* Green */
     border: none;
     border-radius: 0.25em;
     color: white;
-    width: 2em;
-    height: 2em;
-    line-height: 2em;
+    width: 2.25em;
+    height: 2.25em;
+    line-height: 2.25em;
     margin: 0.5em;
     text-align: center;
     text-decoration: none;
@@ -44,14 +48,16 @@ html, body {
 }
 
 [id="keyboard"] span::after {
-    /* content: attr(id); */
     content: attr(title);
     display: block;
 }
 
-[id="keyboard"] span.active,
-[id="keyboard"] span:active {
-    background-color: gray;
+[id="keyboard"] span.sharp::after {
+    position: absolute;
+    line-height: 1.5em;
+    width: 2em;
+    height: 2em;
+    font-size: 0.5em;
 }
 
 [id="keyboard"] span[id=" "] {
@@ -59,7 +65,7 @@ html, body {
 }
 
 [id="keyboard"] span[id="#"] {
-    width: 6em;
+    width: 4em;
 }
 
 [id="keyboard"] span[id="#"]::after {
@@ -75,6 +81,7 @@ html, body {
     text-shadow: -2px 2px #770000;;
 }
 
+[id="keyboard"] span[id="#"],
 [id="keyboard"] span[id="`"],
 [id="keyboard"] span[id="1"],
 [id="keyboard"] span[id="2"],
@@ -91,6 +98,11 @@ html, body {
 [id="keyboard"] span[id="]"],
 [id="keyboard"] span[id="="] {
     background-color: #ADD8E6; /* Blue */
+}
+
+[id="keyboard"] span.active,
+[id="keyboard"] span:active {
+    background-color: gray;
 }
 
 .MIDISounds {
