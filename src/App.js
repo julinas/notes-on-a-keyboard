@@ -207,8 +207,8 @@ class Keyboard extends React.Component {
                 	onClick={this.toggleSharp}
                 >
                 	<MIDISounds ref={(ref) => (this.midi = ref)}  instruments={[3]} />
-                    <Row ref={this.createRef(0)} midi={this.midi} data="`1234567890-=" notes={this.setNotes("A,B,C,D,E,F,G,A,B,C,D,E,F")}/>
-                    <Row ref={this.createRef(1)} midi={this.midi} data="QWERTYUIOP[]" notes={this.setNotes("A6#,G6#,D7,C6,F7#,G7#,A7#,G5#,D5,E8,A,A")}/>
+                    <Row ref={this.createRef(0)} midi={this.midi} data="`1234567890-=" notes={this.setNotes("F8#,G8#,A8#,C9,D9,E9,F9#,G9#,A9#,G2#,A2#,C3,D3")}/>
+                    <Row ref={this.createRef(1)} midi={this.midi} data="QWERTYUIOP[]" notes={this.setNotes("A6#,G6#,D7,C6,F7#,G7#,A7#,G5#,D5,E8,E2,F2#")}/>
                     <Row ref={this.createRef(2)} midi={this.midi} data="ASDFGHJKL;'" notes={this.setNotes("F4#,C5,F6#,F5#,C8,A5#,E7,D6,F3#,E5,G4#")}/>
                     <Row ref={this.createRef(3)} midi={this.midi} data="#ZXCVBNM,./" notes={this.setNotes(" ,E3,E6,G3#,A3#,C4,A4#,E4,D8,C7,D4")} shiftLeft={true}/>
                     <Row ref={this.createRef(4)} midi={this.midi} data=" " notes=" "/>
@@ -228,10 +228,13 @@ class App extends React.Component {
             <div className="root">
                 <div className="titlebox">
                     <div className="name">
-                        Test Arena 
+                        musical notes on a keyboard
                     </div>
                     <div className="titleline">
-                        piano notes, and stuff
+                        Try this: (☉ is rhythm placeholder)
+                    </div>
+                    <div className="titleline">
+                        /☉" " "☉"☉n☉no"☉☉☉A☉AAA☉M☉A☉A"/☉☉☉A☉AAA☉/mM☉MMM☉m/m☉mmmAMm/☉/☉/☉☉☉
                     </div>
                 </div>
 	            <Keyboard/>
