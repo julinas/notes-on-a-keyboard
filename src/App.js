@@ -2,6 +2,8 @@ import React from 'react';
 import MIDISounds from 'midi-sounds-react';
 import './App.css';
 
+// this doesn't use the full MIDI range
+// only 120 out of 127 possible notes - without the highest notes
 const noteNameToNum = (name) => {
 	if (name === " ") return NaN;
 
