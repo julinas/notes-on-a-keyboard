@@ -208,9 +208,9 @@ class Keyboard extends React.Component {
                 >
                 	<MIDISounds ref={(ref) => (this.midi = ref)}  instruments={[3]} />
                     <Row ref={this.createRef(0)} midi={this.midi} data="`1234567890-=" notes={this.setNotes("A,B,C,D,E,F,G,A,B,C,D,E,F")}/>
-                    <Row ref={this.createRef(1)} midi={this.midi} data="QWERTYUIOP[]" notes={this.setNotes("A6#,C7,D7,E7,F7#,G7#,A7#,C8,D8,E8,A,A")}/>
-                    <Row ref={this.createRef(2)} midi={this.midi} data="ASDFGHJKL;'" notes={this.setNotes("C5,D5,E5,F5#,G5#,A5#,C6,D6,E6,F6#,G6#")}/>
-                    <Row ref={this.createRef(3)} midi={this.midi} data="#ZXCVBNM,./" shiftLeft={true} notes={this.setNotes(" ,E3,F3#,G3#,A3#,C4,D4,E4,F4#,G4#,A4#")}/>
+                    <Row ref={this.createRef(1)} midi={this.midi} data="QWERTYUIOP[]" notes={this.setNotes("A6#,G6#,D7,C6,F7#,G7#,A7#,G5#,D5,E8,A,A")}/>
+                    <Row ref={this.createRef(2)} midi={this.midi} data="ASDFGHJKL;'" notes={this.setNotes("F4#,C5,F6#,F5#,C8,A5#,E7,D6,F3#,E5,G4#")}/>
+                    <Row ref={this.createRef(3)} midi={this.midi} data="#ZXCVBNM,./" notes={this.setNotes(" ,E3,E6,G3#,A3#,C4,A4#,E4,D8,C7,D4")} shiftLeft={true}/>
                     <Row ref={this.createRef(4)} midi={this.midi} data=" " notes=" "/>
                 </div>
             </React.Fragment>
