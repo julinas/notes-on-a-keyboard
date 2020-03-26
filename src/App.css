@@ -52,6 +52,10 @@ html, body {
     display: block;
 }
 
+[id="keyboard"].showQwerty span::after {
+    content: attr(id);
+}
+
 [id="keyboard"] span.sharp::after {
     position: absolute;
     line-height: 1.5em;
@@ -70,6 +74,10 @@ html, body {
 
 [id="keyboard"] span[id="#"]::after {
     content: "Sharp";
+}
+
+[id="keyboard"].showQwerty span[id="#"]::after {
+    content: "Shift";
 }
 
 [id="keyboard"].sharp span[id="#"] {

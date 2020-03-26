@@ -152,14 +152,50 @@ class Row extends React.Component {
     }
 }
 
+class CheckQwerty extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.state = {
+            useQwerty: false
+        };
+    }
+
+    handleInputChange = (event) => {
+    	this.setState({useQwerty: !this.state.useQwerty})
+    	this.props.showQwerty();
+    }
+
+	render() {
+		return (
+			<form>
+				<label>
+					Use QWERTY
+					<input
+						name="useQwerty"
+						type="checkbox"
+						checked={this.state.useQwerty}
+						onChange={this.handleInputChange} />
+				</label>
+			</form>
+		)
+	}
+}
+
 class Keyboard extends React.Component {
     constructor(props) {
         super(props);
         this.toggleSharp = this.toggleSharp.bind(this);
+        this.toggleShowQwerty = this.toggleShowQwerty.bind(this);
         this.rows = {};
         this.state = {
+        	showQwerty: false,
             sharp: false
         };
+    }
+
+    toggleShowQwerty = (event) => {
+    	this.setState({showQwerty: !this.state.showQwerty});
     }
 
     toggleSharp = (event) => {
@@ -203,7 +239,7 @@ class Keyboard extends React.Component {
             <React.Fragment>
                 <div 
                 	id="keyboard"
-                	className={this.state.sharp ? 'sharp' : null}
+                	className={(this.state.sharp ? 'sharp' : '') + " " + (this.state.showQwerty ? 'showQwerty' : '')}
                 	onClick={this.toggleSharp}
                 >
                 	<MIDISounds ref={(ref) => (this.midi = ref)}  instruments={[3]} />
@@ -213,6 +249,7 @@ class Keyboard extends React.Component {
                     <Row ref={this.createRef(3)} midi={this.midi} data="#ZXCVBNM,./" notes={this.setNotes(" ,E3,E6,G3#,A3#,C4,A4#,E4,D8,C7,D4")} shiftLeft={true}/>
                     <Row ref={this.createRef(4)} midi={this.midi} data=" " notes=" "/>
                 </div>
+                <CheckQwerty showQwerty={this.toggleShowQwerty}/>
             </React.Fragment>
         )
     }
