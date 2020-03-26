@@ -85,7 +85,9 @@ html, body {
 }
 
 [id="keyboard"] span[id="F"]::after,
-[id="keyboard"] span[id="J"]::after {
+[id="keyboard"] span[id="J"]::after,
+[id="keyboard"] [id="F"] span::after,
+[id="keyboard"] [id="J"] span::after {
     text-shadow: -2px 2px #770000;;
 }
 
