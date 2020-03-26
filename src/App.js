@@ -138,6 +138,7 @@ class Row extends React.Component {
                     {this.zipped.map(x => (
                         <Key 
                             data={x[0]}
+                            key={x[0]}
                             ref={this.createRef(x[0])} // for ref
                             midi={this.props.midi}
                             notekey={x[1]}

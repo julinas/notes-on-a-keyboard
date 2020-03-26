@@ -70,7 +70,7 @@ const handleKeyDown = (event) => {
             let keyboard = document.getElementById("keyboard");
             if (shift != null && 
                 keyboard != null && 
-                keyboard.className !== "sharp") {
+                !keyboard.className.includes("sharp")) {
                 shift.click();
             }
         }
@@ -88,7 +88,7 @@ const handleKeyUp = (event) => {
             let keyboard = document.getElementById("keyboard");
             if (shift != null && 
                 keyboard != null && 
-                keyboard.className === "sharp") {
+                keyboard.className.includes("sharp")) {
                 shift.click();
             }
         }
